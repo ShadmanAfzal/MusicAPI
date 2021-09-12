@@ -144,27 +144,32 @@ class _MusicListState extends State<MusicList> {
                   SizedBox(
                     width: 20,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        snapshot.data.results[index].trackName,
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.w800),
-                      ),
-                      Text(
-                        '- (${snapshot.data.results[index].albumName})',
-                        style: TextStyle(
-                            color: Colors.white70, fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        'Artist - ${snapshot.data.results[index].artistName}',
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                    ],
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          snapshot.data.results[index].trackName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w800),
+                        ),
+                        Text(
+                          '- (${snapshot.data.results[index].albumName})',
+                          style: TextStyle(
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Artist - ${snapshot.data.results[index].artistName}',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

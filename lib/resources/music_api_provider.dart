@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' show Client, Response;
 
 import '../models/music_detail_model.dart';
@@ -15,7 +17,7 @@ class MusicApiProvider {
         await client.get('$_baseUrl/chart.tracks.get?apikey=$_apiKey');
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
-      return MusicModel.fromJson(response.body);
+      return MusicModel.fromJson(jsonDecode(response.body));
     } else {
       // If that call was not successful, throw an error.
       throw Exception('Failed to load List');
@@ -29,7 +31,7 @@ class MusicApiProvider {
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
       print(response.body.toString());
-      return MusicDetailModel.fromJson(response.body);
+      return MusicDetailModel.fromJson(jsonDecode(response.body));
     } else {
       // If that call was not successful, throw an error.
       throw Exception('Failed to load List');
@@ -43,7 +45,7 @@ class MusicApiProvider {
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
       print(response.body.toString());
-      return MusicDetailTrackModel.fromJson(response.body);
+      return MusicDetailTrackModel.fromJson(jsonDecode(response.body));
     } else {
       // If that call was not successful, throw an error.
       throw Exception('Failed to load List');

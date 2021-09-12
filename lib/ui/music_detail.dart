@@ -62,7 +62,7 @@ class _MusicDetailState extends State<MusicDetail> {
 
   checkForBookmark() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    bookmarkedTracks = sharedPreferences.getStringList('bookmarks');
+    bookmarkedTracks = sharedPreferences.getStringList('bookmarks') ?? [];
     for (String track in bookmarkedTracks) {
       String trackId = track.split('|')[0];
       if (trackId == widget.trackId.toString()) {
@@ -88,6 +88,8 @@ class _MusicDetailState extends State<MusicDetail> {
     sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
       isBookmarked = false;
+      bookmarkedTracks.remove(
+          '${widget.trackId}|${widget.trackName}|${widget.albumName}|${widget.artistName}');
       sharedPreferences.setStringList('bookmarks', bookmarkedTracks);
     });
     print(bookmarkedTracks.length);
@@ -237,7 +239,7 @@ class _MusicDetailState extends State<MusicDetail> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    isBookmarked ? bookmark() : unBookmark();
+                    !isBookmarked ? bookmark() : unBookmark();
                   },
                   child: Container(
                     color: Colors.black87,

@@ -36,7 +36,7 @@ class _MusicPlaylistState extends State<MusicPlaylist> {
 
   getBookmarkList() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    bookmarkedTracks = sharedPreferences.getStringList('bookmarks');
+    bookmarkedTracks = sharedPreferences.getStringList('bookmarks') ?? [];
     for (String track in bookmarkedTracks) {
       List<String> trackDetails = track.split('|');
       playlistModelList.add(PlaylistModel(
@@ -95,8 +95,8 @@ class _MusicPlaylistState extends State<MusicPlaylist> {
       itemBuilder: (BuildContext context, int index) {
         ///Return Single Widget
         return GestureDetector(
-          onTap: () {
-            Navigator.push(
+          onTap: () async {
+            await Navigator.push(
               context,
               MaterialPageRoute(builder: (context) {
                 return MusicDetail(
@@ -108,6 +108,9 @@ class _MusicPlaylistState extends State<MusicPlaylist> {
                 );
               }),
             );
+            playlistModelList.clear();
+            await getBookmarkList();
+            setState(() {});
           },
           child: Card(
             elevation: 1,

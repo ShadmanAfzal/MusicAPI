@@ -30,17 +30,15 @@ class _MusicDetailState extends State<MusicDetail> {
   SharedPreferences sharedPreferences;
   var subscription;
   bool isBookmarked = false;
-  List<String> bookmarkedTracks;
+  List<String> bookmarkedTracks = [];
 
   bool isConnected = true;
-  TextStyle headingTextStyle =
-      TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: Colors.black);
-  TextStyle nonHeadingTextStyle = TextStyle(
-      fontWeight: FontWeight.w600, fontSize: 18, color: Colors.black54);
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor:
+          theme.brightness == Brightness.light ? Colors.white : theme.cardColor,
       appBar: AppBar(
         title: Text('Popular Music'),
       ),
@@ -63,6 +61,7 @@ class _MusicDetailState extends State<MusicDetail> {
   checkForBookmark() async {
     sharedPreferences = await SharedPreferences.getInstance();
     bookmarkedTracks = sharedPreferences.getStringList('bookmarks') ?? [];
+
     for (String track in bookmarkedTracks) {
       String trackId = track.split('|')[0];
       if (trackId == widget.trackId.toString()) {
@@ -79,19 +78,19 @@ class _MusicDetailState extends State<MusicDetail> {
       isBookmarked = true;
       bookmarkedTracks.add(
           '${widget.trackId}|${widget.trackName}|${widget.albumName}|${widget.artistName}');
-      sharedPreferences.setStringList('bookmarks', bookmarkedTracks);
     });
-    print(bookmarkedTracks.length);
+    await sharedPreferences.setStringList('bookmarks', bookmarkedTracks);
+    // print(bookmarkedTracks.length);
   }
 
   unBookmark() async {
     sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
       isBookmarked = false;
-      bookmarkedTracks.remove(
-          '${widget.trackId}|${widget.trackName}|${widget.albumName}|${widget.artistName}');
-      sharedPreferences.setStringList('bookmarks', bookmarkedTracks);
+      print(bookmarkedTracks.remove(
+          '${widget.trackId}|${widget.trackName}|${widget.albumName}|${widget.artistName}'));
     });
+    await sharedPreferences.setStringList('bookmarks', bookmarkedTracks);
     print(bookmarkedTracks.length);
   }
 
@@ -136,9 +135,23 @@ class _MusicDetailState extends State<MusicDetail> {
   }
 
   Widget buildWidget(AsyncSnapshot<MusicDetailTrackModel> snapshot) {
+    ThemeData theme = Theme.of(context);
+    TextStyle headingTextStyle = TextStyle(
+        fontWeight: FontWeight.w700,
+        fontSize: 16.5,
+        color:
+            theme.brightness == Brightness.light ? Colors.black : Colors.white);
+    TextStyle nonHeadingTextStyle = TextStyle(
+        fontSize: 17,
+        color: theme.brightness == Brightness.light
+            ? Colors.black87
+            : Colors.white);
+
     return isConnected
         ? Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: theme.brightness == Brightness.light
+                ? Colors.white
+                : theme.cardColor,
             body: Stack(
               alignment: Alignment.bottomCenter,
               children: <Widget>[
@@ -242,7 +255,9 @@ class _MusicDetailState extends State<MusicDetail> {
                     !isBookmarked ? bookmark() : unBookmark();
                   },
                   child: Container(
-                    color: Colors.black87,
+                    color: theme.brightness == Brightness.light
+                        ? theme.accentColor.withOpacity(0.9)
+                        : Colors.black.withOpacity(0.9),
                     padding: EdgeInsets.symmetric(
                       vertical: 16,
                     ),
@@ -266,6 +281,7 @@ class _MusicDetailState extends State<MusicDetail> {
                               ? Icons.playlist_add_check
                               : Icons.playlist_add,
                           size: 30,
+                          color: Colors.white,
                         ),
                       ],
                     ),

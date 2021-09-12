@@ -1,6 +1,8 @@
+import 'package:appyhigh_assignment_flutter/blocs/theme_bloc.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../blocs/music_bloc.dart';
 import '../models/music_model.dart';
@@ -54,26 +56,25 @@ class _MusicListState extends State<MusicList> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
     return Scaffold(
       backgroundColor: isConnected ? Colors.transparent : Colors.white,
       appBar: AppBar(
         title: Text('Popular Music'),
         actions: <Widget>[
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) {
+          changeTheme(),
+          IconButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
                   return MusicPlaylist();
-                }),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: Icon(
-                Icons.playlist_play,
-                size: 40,
+                },
               ),
+            ),
+            icon: Icon(
+              Icons.playlist_add,
+              size: 38,
             ),
           ),
         ],
@@ -96,14 +97,39 @@ class _MusicListState extends State<MusicList> {
               'No Internet Connection',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                color: theme.brightness == Brightness.light
+                    ? Colors.black87
+                    : Colors.white70,
                 fontSize: 20,
               ),
             )),
     );
   }
 
+  Widget changeTheme() {
+    return Consumer<ThemeNotifier>(builder: (_, notifier, children) {
+      return Column(
+        children: [
+          Row(
+            children: [
+              IconButton(
+                  onPressed: () => notifier.changeTheme("light"),
+                  icon: Icon(Icons.light_mode)),
+              IconButton(
+                  onPressed: () => notifier.changeTheme("orange"),
+                  icon: Icon(Icons.tag_faces_rounded)),
+              IconButton(
+                  onPressed: () => notifier.changeTheme("dark"),
+                  icon: Icon(Icons.dark_mode)),
+            ],
+          )
+        ],
+      );
+    });
+  }
+
   Widget buildList(AsyncSnapshot<MusicModel> snapshot) {
+    ThemeData theme = Theme.of(context);
     return ListView.builder(
       physics: BouncingScrollPhysics(),
       shrinkWrap: true,
@@ -139,7 +165,10 @@ class _MusicListState extends State<MusicList> {
                   ),
                   Icon(
                     Icons.library_music,
-                    size: 30,
+                    color: theme.brightness == Brightness.dark
+                        ? Colors.white
+                        : theme.accentColor,
+                    size: 35,
                   ),
                   SizedBox(
                     width: 20,
@@ -153,20 +182,24 @@ class _MusicListState extends State<MusicList> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w800),
+                              fontWeight: FontWeight.w800, fontSize: 16),
                         ),
                         Text(
                           '- (${snapshot.data.results[index].albumName})',
                           style: TextStyle(
-                              color: Colors.white70,
-                              fontWeight: FontWeight.w500),
+                            color: theme.brightness == Brightness.light
+                                ? Colors.black54
+                                : Colors.white70,
+                            fontSize: 16,
+                          ),
                         ),
                         SizedBox(
                           height: 5,
                         ),
                         Text(
                           'Artist - ${snapshot.data.results[index].artistName}',
-                          style: TextStyle(fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 16),
                         ),
                       ],
                     ),

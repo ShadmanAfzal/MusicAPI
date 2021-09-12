@@ -14,10 +14,10 @@ class MusicPlaylist extends StatefulWidget {
 class _MusicPlaylistState extends State<MusicPlaylist> {
   SharedPreferences sharedPreferences;
   bool isBookmarked = false;
-  List<String> bookmarkedTracks;
+  List<String> bookmarkedTracks = [];
   var subscription;
   bool isConnected = true;
-  List<PlaylistModel> playlistModelList;
+  List<PlaylistModel> playlistModelList = [];
   @override
   void initState() {
     super.initState();
@@ -36,14 +36,15 @@ class _MusicPlaylistState extends State<MusicPlaylist> {
 
   getBookmarkList() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    bookmarkedTracks = sharedPreferences.getStringList('bookmarks') ?? [];
+    bookmarkedTracks = sharedPreferences.getStringList('bookmarks');
+    print(bookmarkedTracks);
+
     for (String track in bookmarkedTracks) {
       List<String> trackDetails = track.split('|');
       playlistModelList.add(PlaylistModel(
           trackDetails[0], trackDetails[1], trackDetails[2], trackDetails[3]));
     }
-
-    print(playlistModelList.length);
+    // print(playlistModelList.length);
   }
 
   void checkConnectivity() async {
@@ -66,8 +67,13 @@ class _MusicPlaylistState extends State<MusicPlaylist> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: isConnected ? Colors.transparent : Colors.white,
+      backgroundColor: isConnected
+          ? theme.brightness == Brightness.dark
+              ? theme.cardColor
+              : Colors.white
+          : Colors.white,
       appBar: AppBar(
         title: Text('My Playlist'),
       ),
@@ -86,6 +92,8 @@ class _MusicPlaylistState extends State<MusicPlaylist> {
   }
 
   Widget buildList() {
+    ThemeData theme = Theme.of(context);
+    bool isDark = theme.brightness == Brightness.dark;
     return ListView.builder(
       physics: BouncingScrollPhysics(),
       shrinkWrap: true,
@@ -126,6 +134,7 @@ class _MusicPlaylistState extends State<MusicPlaylist> {
                   Icon(
                     Icons.library_music,
                     size: 30,
+                    color: isDark ? Colors.white : theme.accentColor,
                   ),
                   SizedBox(
                     width: 20,
@@ -136,12 +145,16 @@ class _MusicPlaylistState extends State<MusicPlaylist> {
                       Text(
                         playlistModelList[index].trackName,
                         style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.w800),
+                            color: isDark ? Colors.white : Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800),
                       ),
                       Text(
                         '- (${playlistModelList[index].albumName})',
                         style: TextStyle(
-                            color: Colors.white70, fontWeight: FontWeight.w500),
+                            color: isDark ? Colors.white70 : Colors.black87,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500),
                       ),
                       SizedBox(
                         height: 5,

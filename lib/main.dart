@@ -1,24 +1,29 @@
+import 'package:appyhigh_assignment_flutter/models/theme_model.dart';
 import 'package:flutter/material.dart';
-
-import 'Screen/permissionScreen.dart';
+import 'package:provider/provider.dart';
+import 'blocs/theme_bloc.dart';
+import 'ui/music_list.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key key}) : super(key: key);
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Permission App',
-      debugShowMaterialGrid: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const PermissionScreen(),
+    return ChangeNotifierProvider(
+      create: (_) => ThemeNotifier(),
+      child: Consumer<ThemeNotifier>(builder: (context, notifier, child) {
+        return MaterialApp(
+          title: 'Flutter Music Application',
+          debugShowCheckedModeBanner: false,
+          theme: notifier.theme,
+          home: Scaffold(
+            body: MusicList(),
+          ),
+        );
+      }),
     );
   }
 }

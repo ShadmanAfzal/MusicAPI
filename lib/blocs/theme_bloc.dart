@@ -11,7 +11,7 @@ class ThemeNotifier extends ChangeNotifier {
       theme = dark;
     else if (changeTheme == "light")
       theme = light;
-    else if (changeTheme == "orange") theme = orangeTheme;
+    else if (changeTheme == "teal") theme = teal;
     _savePrefs(changeTheme);
     notifyListeners();
   }
@@ -27,18 +27,18 @@ class ThemeNotifier extends ChangeNotifier {
 
   _loadPrefs() async {
     await _initPrefs();
-    String string_theme = _prefs.getString("theme") ?? "dark";
+    String stringTheme = _prefs.getString("theme") ?? "dark";
 
-    if (string_theme == "dark")
+    if (stringTheme == "dark")
       theme = dark;
-    else if (string_theme == "light")
+    else if (stringTheme == "light")
       theme = light;
-    else if (string_theme == "orange") theme = orangeTheme;
+    else if (stringTheme == "teal") theme = teal;
     notifyListeners();
   }
 
-  _savePrefs(String string_theme) async {
+  _savePrefs(String stringtheme) async {
     await _initPrefs();
-    _prefs.setString("theme", string_theme);
+    _prefs.setString("theme", stringtheme);
   }
 }

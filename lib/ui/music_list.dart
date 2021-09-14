@@ -116,7 +116,7 @@ class _MusicListState extends State<MusicList> {
                   onPressed: () => notifier.changeTheme("light"),
                   icon: Icon(Icons.light_mode)),
               IconButton(
-                  onPressed: () => notifier.changeTheme("orange"),
+                  onPressed: () => notifier.changeTheme("teal"),
                   icon: Icon(Icons.tag_faces_rounded)),
               IconButton(
                   onPressed: () => notifier.changeTheme("dark"),

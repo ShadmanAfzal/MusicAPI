@@ -15,7 +15,7 @@ ThemeData dark = ThemeData(
   accentColor: Colors.teal,
 );
 
-ThemeData orangeTheme = ThemeData(
+ThemeData teal = ThemeData(
   brightness: Brightness.light,
   primarySwatch: Colors.teal,
   scaffoldBackgroundColor: Colors.white,

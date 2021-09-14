@@ -104,7 +104,7 @@ class _MusicPlaylistState extends State<MusicPlaylist> {
         ///Return Single Widget
         return GestureDetector(
           onTap: () async {
-            Navigator.push(
+            await Navigator.push(
               context,
               MaterialPageRoute(builder: (context) {
                 return MusicDetail(
@@ -112,10 +112,12 @@ class _MusicPlaylistState extends State<MusicPlaylist> {
                   trackName: playlistModelList[index].trackName,
                   albumName: playlistModelList[index].albumName,
                   artistName: playlistModelList[index].artistName,
-                  index: index,
                 );
               }),
             );
+            playlistModelList.clear();
+            getBookmarkList();
+            setState(() {});
           },
           child: Card(
             elevation: 1,
